@@ -1,0 +1,14 @@
+AxDroid: Android for Dell Axim X50/X51(v) PDAs
+
+Author: Paul Burton <paulburton89@gmail.com>
+        http://www.paulburton.eu
+
+Requirements:
+	Git, repo & CVS
+	CodeSourcery G++ Lite 2010q1-202 for ARM GNU/Linux
+	arm-mingw32ce from the cegcc project
+	Usual android building stuff like JDK5
+
+To build, just run ./build.sh and hopefully everything will happen automagically. The default is a test build, which is almost like a release build but with certain things like a telnet daemon and the android logger enabled. If you pass the -d flag, you'll get a debug build. If you pass the -r flag, you'll get a release build.
+
+I accept no responsibility for Axims which break, spontaneously combust, or grow legs and run away.

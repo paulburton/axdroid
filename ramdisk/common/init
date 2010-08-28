@@ -1,0 +1,96 @@
+#!/bin/sh
+
+ROOTIMG=/sdcard/root.img
+
+DEBUG=1
+COMPCACHE=1
+
+mount -t proc none /proc
+mount -t sysfs none /sys
+
+mount -t devtmpfs devtmpfs /dev
+mkdir -m 0755 /dev/pts
+mkdir /dev/pts
+mount -t devpts -o gid=5,mode=620 devpts /dev/pts
+
+hang()
+{
+	while [ true ]
+	do
+		echo >/dev/null
+	done
+}
+
+echo "Axdroid booting..." > /dev/console
+cat /proc/cpuinfo > /dev/console
+
+if [ $COMPCACHE -eq 1 ]
+then
+	insmod /lib/modules/ramzswap.ko num_devices=1
+fi
+
+mkdir /sdcard
+mount -t vfat -o async,noatime,nodiratime,umask=0000 /dev/mmcblk0p1 /sdcard > /dev/console 2>&1
+
+if [ ! $? -eq 0 ]
+then
+	echo "Unable to mount SD card!"
+	echo "mount: exit status $?"
+	hang
+fi
+
+echo "SD card mounted" > /dev/console
+ls /sdcard > /dev/console
+
+echo "Mounting root FS image" > /dev/console
+mkdir /realroot
+mount -o loop,noatime,nodiratime $ROOTIMG /realroot > /dev/console 2>&1
+
+if [ ! $? -eq 0 ]
+then
+	echo "Unable to mount root FS image!"
+	echo "mount: exit status $?"
+	hang
+fi
+
+mkdir -p /realroot/bin
+mkdir -p /realroot/sbin
+mkdir -p /realroot/usr/bin
+mkdir -p /realroot/usr/sbin
+cp -a /bin/* /realroot/bin/ > /dev/console 2>&1
+cp -a /sbin/* /realroot/sbin/ > /dev/console 2>&1
+cp -a /usr/bin/* /realroot/usr/bin/ > /dev/console 2>&1
+cp -a /usr/sbin/* /realroot/usr/sbin/ > /dev/console 2>&1
+
+if [ $DEBUG -eq 0 ]
+then
+	VGA=`cat /proc/mtd | grep "Video SDRAM" | wc -l`
+	if [ $VGA -eq 1 ]
+	then
+		cp /initlogoVGA.rle /realroot/initlogo.rle
+	else
+		cp /initlogoQVGA.rle /realroot/initlogo.rle
+	fi
+else
+	rm -f /realroot/initlogo.rle
+fi
+
+echo "/realroot:" > /dev/console
+ls -l /realroot > /dev/console
+#sleep 5s
+
+echo "/realroot/bin:" > /dev/console
+ls /realroot/bin > /dev/console
+
+echo "Moving system mountpoints" > /dev/console
+mount -o move /proc /realroot/proc
+mount -o move /sys /realroot/sys
+mount -o move /dev /realroot/dev
+
+echo "Moving SD card mountpoint" > /realroot/dev/console
+mkdir -p /realroot/mnt/sdcard
+mount -o move /sdcard /realroot/mnt/sdcard
+
+echo "Switching root" > /realroot/dev/console
+exec switch_root -c /dev/console /realroot /axdroid.sh
+

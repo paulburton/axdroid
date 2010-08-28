@@ -1,0 +1,23 @@
+? out
+Index: src/l1trace.cpp
+===================================================================
+RCS file: /cvs/haret/src/l1trace.cpp,v
+retrieving revision 1.36
+diff -a -u -r1.36 l1trace.cpp
+--- src/l1trace.cpp	26 Jul 2008 15:35:16 -0000	1.36
++++ src/l1trace.cpp	14 Aug 2010 13:51:59 -0000
+@@ -212,12 +212,12 @@
+         if (Bbit(insn)) {
+             addrsize = 1;
+             asm("swpb %0, %1, [%2]"
+-                : "=r" (readval)
++                : "=&r" (readval)
+                 : "r" (writeval), "r" (newaddr));
+         } else {
+             addrsize = 4;
+             asm("swp %0, %1, [%2]"
+-                : "=r" (readval)
++                : "=&r" (readval)
+                 : "r" (writeval), "r" (newaddr));
+         }
+         setReg(regs, mask_Rd(insn), readval);

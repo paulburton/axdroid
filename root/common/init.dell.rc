@@ -1,0 +1,28 @@
+on boot
+    setprop net.eth0.dns1 10.0.0.1
+    setprop net.gprs.local-ip 10.0.0.15
+    setprop ro.radio.use-ppp no
+
+    symlink /dev/snd/pcmC0D0c /dev/pcmC0D0c
+    symlink /dev/snd/pcmC0D0p /dev/pcmC0D0p
+    symlink /dev/snd/controlC0 /dev/controlC0
+    symlink /dev/snd/timer /dev/timer
+    chmod 0777 /dev/pcmC0D0c
+    chmod 0777 /dev/pcmC0D0p
+    chmod 0777 /dev/controlC0
+    chmod 0777 /dev/timer
+    chown root audio /dev/snd/controlC0
+    chown root audio /dev/snd/pcmC0D0c
+    chown root audio /dev/snd/pcmC0D0p
+    chown root audio /dev/snd/timer
+
+    setprop alsa.mixer.playback.master 'Internal Speaker'
+    setprop alsa.mixer.playback.speaker 'Internal Speaker'
+    setprop alsa.mixer.playback.headset 'Headphone Jack'
+    setprop alsa.mixer.playback.earpiece 'Headphone Jack'
+    setprop alsa.mixer.capture.master 'Line Input'
+    setprop alsa.mixer.capture.earpiece 'Line Input'
+    
+service axim-setup /system/etc/init.axim.sh
+    oneshot
+
