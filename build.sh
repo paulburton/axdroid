@@ -107,7 +107,7 @@ downloadTheCode()
 		(
 			set -e
 			cd src/platform
-			repo init git://github.com/paulburton/axdroid-manifest.git -b froyo
+			repo init -u git://github.com/paulburton/axdroid-manifest.git -b froyo
 			repo sync
 		) || exit 1
 	fi
