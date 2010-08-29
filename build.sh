@@ -592,10 +592,12 @@ then
 	rm -rf build
 	rm -rf output
 
-	ARCH=arm make -C kernel clean
+	ARCH=arm make -C src/kernel clean
+	ARCH=arm make -C src/acx-mac80211 KERNELDIR=`pwd`/src/kernel clean
+	ARCH=arm make -C src/acx-mac80211/platform-aximx50 KERNELDIR=`pwd`/src/kernel clean
 
 	(
-		cd platform
+		cd src/platform
 		make clobber
 	)
 elif [ $KCONFIG -eq 1 ]
