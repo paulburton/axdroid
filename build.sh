@@ -27,7 +27,7 @@ do
 		echo "  -r   Release Build"
 		echo "  -c   Clean Everything"
 		echo "  -z   Create Zip for Distribution"
-		echo "  -z   Configure Kernel"
+		echo "  -k   Configure Kernel"
 		;;
 	esac
 done
