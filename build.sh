@@ -130,7 +130,7 @@ downloadTheCode()
 		(
 			set -e
 			cd src
-			git clone git://acx100.git.sourceforge.net/gitroot/acx100/acx-mac80211
+			git clone git://github.com/paulburton/axdroid-acx-mac80211.git acx-mac80211
 		) || exit 1
 	fi
 
