@@ -8,8 +8,9 @@ TEST=1
 CLEAN=0
 ZIP=0
 KCONFIG=0
+UPDATE=0
 
-while getopts 'rdczk' OPTION
+while getopts 'rdczku' OPTION
 do
 	case $OPTION in
 	r)	RELEASE=1
@@ -22,12 +23,15 @@ do
 		;;
 	k)	KCONFIG=1
 		;;
+	u)	UPDATE=1
+		;;
 	?)	echo "Usage: $0 <options>"
 		echo "  -d   Debug Build"
 		echo "  -r   Release Build"
 		echo "  -c   Clean Everything"
 		echo "  -z   Create Zip for Distribution"
 		echo "  -k   Configure Kernel"
+		echo "  -u   Update"
 		;;
 	esac
 done
@@ -619,6 +623,22 @@ then
 
 	cp src/kernel/.config kernel.config
 	cp kernel.config src/kernel/arch/arm/configs/aximx50_defconfig
+elif [ $UPDATE -eq 1 ]
+then
+	git pull origin master
+
+	(
+		cd src/kernel
+		git pull
+	)
+	(
+		cd src/acx-mac80211
+		git pull
+	)
+	(
+		cd src/platform
+		repo sync
+	)
 else
 	downloadTheCode
 	checkBuildType
