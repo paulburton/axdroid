@@ -387,11 +387,11 @@ buildWiFiFirmware()
 
 	if [ ! -f build/wifi/WLANGEN.BIN ]
 	then
-		wget -O build/wifi/WLANGEN.BIN http://www.paulburton.eu/project/axdroid/ACX100_dl.bin
+		wget -O build/wifi/WLANGEN.BIN http://www.paulburton.eu/project/axdroid/wifi_fw/1.10.7.K/WLANGEN.BIN
 	fi
 	if [ ! -f build/wifi/RADIO0d.BIN ]
 	then
-		wget -O build/wifi/RADIO0d.BIN http://www.paulburton.eu/project/axdroid/RADIO0d.BIN
+		wget -O build/wifi/RADIO0d.BIN http://www.paulburton.eu/project/axdroid/wifi_fw/1.10.7.K/RADIO0d.BIN
 	fi
 
 	mkdir -p .build/root/mnt/lib/firmware
