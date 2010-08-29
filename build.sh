@@ -382,6 +382,7 @@ buildWiFiFirmware()
 {
 	mkdir -p .build/root/mnt/lib/firmware
 	wget -O .build/root/mnt/lib/firmware/WLANGEN.BIN http://www.paulburton.eu/project/axdroid/ACX100_dl.bin
+	wget -O .build/root/mnt/lib/firmware/RADIO0d.BIN http://www.paulburton.eu/project/axdroid/RADIO0d.BIN
 }
 
 buildPlatform()
