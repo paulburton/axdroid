@@ -327,6 +327,7 @@ buildRamDisk()
 
 	buildInitLogo "VGA"
 	buildInitLogo "QVGA"
+	buildKernel			# For modules
 	buildCompCache
 	buildWiFiModule
 
@@ -356,6 +357,10 @@ buildKernel()
 	PATH=$PATH:`pwd`/src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
 	ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
 	make -C src/kernel -j4
+
+	PATH=$PATH:`pwd`/src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
+	ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
+	make -C src/kernel modules_install INSTALL_MOD_PATH=`pwd`/.build/ramdisk
 
 	mkdir -p build/kernel
 	cp src/kernel/arch/arm/boot/zImage build/kernel/
