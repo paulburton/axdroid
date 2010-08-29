@@ -3,6 +3,8 @@ on boot
     setprop net.gprs.local-ip 10.0.0.15
     setprop ro.radio.use-ppp no
 
+	setprop wifi.interface wlan0
+
     symlink /dev/snd/pcmC0D0c /dev/pcmC0D0c
     symlink /dev/snd/pcmC0D0p /dev/pcmC0D0p
     symlink /dev/snd/controlC0 /dev/controlC0
