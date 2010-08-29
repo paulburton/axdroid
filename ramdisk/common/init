@@ -57,10 +57,12 @@ mkdir -p /realroot/bin
 mkdir -p /realroot/sbin
 mkdir -p /realroot/usr/bin
 mkdir -p /realroot/usr/sbin
+mkdir -p /realroot/lib/modules
 cp -a /bin/* /realroot/bin/ > /dev/console 2>&1
 cp -a /sbin/* /realroot/sbin/ > /dev/console 2>&1
 cp -a /usr/bin/* /realroot/usr/bin/ > /dev/console 2>&1
 cp -a /usr/sbin/* /realroot/usr/sbin/ > /dev/console 2>&1
+cp -a /lib/modules/* /realroot/lib/modules/ > /dev/console 2>&1
 
 if [ $DEBUG -eq 0 ]
 then

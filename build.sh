@@ -123,6 +123,17 @@ downloadTheCode()
 		) || exit 1
 	fi
 
+	if [ ! -d src/acx-mac80211 ]
+	then
+		mkdir -p src
+
+		(
+			set -e
+			cd src
+			git clone git://acx100.git.sourceforge.net/gitroot/acx100/acx-mac80211
+		) || exit 1
+	fi
+
 	if [ ! -d src/haret ]
 	then
 		mkdir -p src
@@ -262,6 +273,31 @@ buildCompCache()
 	cp $CCDIR/sub-projects/rzscontrol/rzscontrol .build/ramdisk/bin/
 }
 
+buildWiFiModule()
+{
+	buildKernel
+
+	(
+		cd src/acx-mac80211
+
+		PATH=$PATH:`pwd`/../../src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
+		ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
+		EXTRA_KCONFIG="CONFIG_ACX_MAC80211=m CONFIG_ACX_MAC80211_PCI=n CONFIG_ACX_MAC80211_USB=n CONFIG_ACX_MAC80211_MEM=y CONFIG_MACH_X50=y" \
+		make KERNELDIR=`pwd`/../../src/kernel KVERSION=2.6.32 || exit 1
+
+		cd platform-aximx50
+
+		PATH=$PATH:`pwd`/../../../src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
+		ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
+		EXTRA_KCONFIG="CONFIG_AXIMX50_ACX=m" \
+		make KERNELDIR=`pwd`/../../../src/kernel KVERSION=2.6.32 || exit 1
+	) || exit 1
+
+	mkdir -p .build/ramdisk/lib/modules
+	cp src/acx-mac80211/acx-mac80211.ko .build/ramdisk/lib/modules/
+	cp src/acx-mac80211/platform-aximx50/aximx50_acx.ko .build/ramdisk/lib/modules/
+}
+
 buildRamDisk()
 {
 	if [ -f build/ramdisk/ramdisk.cpio ]
@@ -298,6 +334,7 @@ buildRamDisk()
 	buildInitLogo "VGA"
 	buildInitLogo "QVGA"
 	buildCompCache
+	buildWiFiModule
 
 	(
 		set -e
@@ -339,6 +376,12 @@ clonePermissions()
 	sed -i "s|$PDIR|$FDIR|g" .build/root/chmodscript
 	. .build/root/chmodscript
 	rm .build/root/chmodscript
+}
+
+buildWiFiFirmware()
+{
+	mkdir -p .build/root/mnt/lib/firmware
+	wget -O .build/root/mnt/lib/firmware/WLANGEN.BIN http://www.paulburton.eu/project/axdroid/ACX100_dl.bin
 }
 
 buildPlatform()
@@ -422,6 +465,8 @@ buildPlatform()
 	then
 		sed -i 's/DEBUG=1/DEBUG=0/' .build/root/mnt/axdroid.sh
 	fi
+
+	buildWiFiFirmware
 
 	umountLoop .build/root/mnt
 	mkdir -p build/root
