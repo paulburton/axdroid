@@ -13,6 +13,8 @@ mkdir -m 0755 /dev/pts
 mkdir /dev/pts
 mount -t devpts -o gid=5,mode=620 devpts /dev/pts
 
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+
 hang()
 {
 	while [ true ]
