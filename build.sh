@@ -45,16 +45,10 @@ fi
 # Otherwise, regular mount will be used
 # This is useful if you setup sudo to not ask for a password when
 # running mountloop/umountloop :)
-HAVEMOUNTLOOP=0
-which mountloop >/dev/null
-if [ $? -eq 0 ]
+HAVEMOUNTLOOP=`which mountloop | wc -l`
+if [ $HAVEMOUNTLOOP -eq 1 ]
 then
-	which umountloop >/dev/null
-
-	if [ $? -eq 0 ]
-	then
-		HAVEMOUNTLOOP=1
-	fi
+	HAVEMOUNTLOOP=`which umountloop | wc -l`
 fi
 
 checkBuildType()
