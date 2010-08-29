@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ -z "$FIRMWARE" ]
+then
+	exit 1
+fi
+
+echo "$DEVPATH requesting firmware '$FIRMWARE'"
+
+FILE="/lib/firmware/$FIRMWARE"
+
+if [ ! -f "$FILE" ]
+then
+	echo "Firmware not found!"
+	echo -1 > /sys/$DEVPATH/loading
+fi
+
+echo 1 > /sys/$DEVPATH/loading
+cat "$FILE" > /sys/$DEVPATH/data
+echo 0 > /sys/$DEVPATH/loading
+
