@@ -379,9 +379,20 @@ clonePermissions()
 
 buildWiFiFirmware()
 {
+	mkdir -p build/wifi
+
+	if [ ! -d build/wifi/WLANGEN.BIN ]
+	then
+		wget -O build/wifi/WLANGEN.BIN http://www.paulburton.eu/project/axdroid/ACX100_dl.bin
+	fi
+	if [ ! -d build/wifi/RADIO0d.BIN ]
+	then
+		wget -O build/wifi/RADIO0d.BIN http://www.paulburton.eu/project/axdroid/RADIO0d.BIN
+	fi
+
 	mkdir -p .build/root/mnt/lib/firmware
-	wget -O .build/root/mnt/lib/firmware/WLANGEN.BIN http://www.paulburton.eu/project/axdroid/ACX100_dl.bin
-	wget -O .build/root/mnt/lib/firmware/RADIO0d.BIN http://www.paulburton.eu/project/axdroid/RADIO0d.BIN
+	cp build/wifi/WLANGEN.BIN .build/root/mnt/lib/firmware/
+	cp build/wifi/RADIO0d.BIN .build/root/mnt/lib/firmware/
 }
 
 buildPlatform()
