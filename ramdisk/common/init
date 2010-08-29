@@ -31,6 +31,8 @@ then
 	insmod /lib/modules/ramzswap.ko num_devices=1
 fi
 
+insmod /lib/modules/acx-mac80211.ko
+
 mkdir /sdcard
 mount -t vfat -o async,noatime,nodiratime,umask=0000 /dev/mmcblk0p1 /sdcard > /dev/console 2>&1
 
