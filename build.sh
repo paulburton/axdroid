@@ -346,6 +346,9 @@ buildRamDisk()
 
 buildKernel()
 {
+	disableAlways="UID16 SYSCTL_SYSCALL"
+	disableInRelease="ANDROID_LOGGER KALLSYMS PRINTK BUG"
+
 	if [ -f build/kernel/zImage ]
 	then
 		return 0
@@ -353,9 +356,17 @@ buildKernel()
 
 	cp kernel.config src/kernel/.config
 
+	for confOption in $disableAlways
+	do
+		sed -i "s/CONFIG_$confOption=y/CONFIG_$confOption=n/" src/kernel/.config
+	done
+
 	if [ $RELEASE -eq 1 ]
 	then
-		sed -i 's/CONFIG_ANDROID_LOGGER=y/CONFIG_ANDROID_LOGGER=n/' src/kernel/.config
+		for confOption in $disableInRelease
+		do
+			sed -i "s/CONFIG_$confOption=y/CONFIG_$confOption=n/" src/kernel/.config
+		done
 	fi
 
 	PATH=$PATH:`pwd`/src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
