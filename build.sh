@@ -495,6 +495,11 @@ buildPlatform()
 	clonePermissions src/platform/out/$OUTDIR/target/product/axim/system/ .build/root/mnt/system/
 	clonePermissions src/platform/out/$OUTDIR/target/product/axim/data/ .build/root/mnt/data/
 
+	chmod 777 .build/root/mnt/system/media
+	chmod 777 .build/root/mnt/system/media/audio
+	bash -c "chmod 777 .build/root/mnt/system/media/audio/{alarms,notifications,ringtones,ui}"
+	bash -c "chmod 777 .build/root/mnt/system/media/audio/{alarms,notifications,ringtones,ui}/*"
+
 	rm -f .build/root/mnt/init.goldfish.rc
 	rm -f .build/root/mnt/system/etc/init.goldfish.sh
 
