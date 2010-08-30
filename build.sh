@@ -669,8 +669,11 @@ else
 	buildSwap
 	buildHaReT
 	buildOutput
-	buildSDCard /media/AXDROIDSD
-	buildSDCard /media/SD-1024
+
+	for card in $AXDROID_SD
+	do
+		buildSDCard "$card"
+	done
 
 	if [ $ZIP -eq 1 ]
 	then

@@ -9,6 +9,15 @@ Requirements:
 	arm-mingw32ce from the cegcc project
 	Usual android building stuff like JDK5
 
+The scripts mountloop/umountloop can make life easier if you setup sudo	to not ask for your password when you run them. Get them from:
+	http://www.paulburton.eu/downloads/shellscripts/mountloop
+	http://www.paulburton.eu/downloads/shellscripts/umountloop
+and put them somewhere in your path if you like. If you don't have them building will still work, you'll just have to enter your password
+
+You probably want to set the AXDROID_SD environment variable, eg:
+	export AXDROID_SD="/media/AXDROIDSD /media/SD-1024"
+will output to both those cards (if they're present)
+
 To build, just run ./build.sh and hopefully everything will happen automagically. The default is a test build, which is almost like a release build but with certain things like a telnet daemon and the android logger enabled. If you pass the -d flag, you'll get a debug build. If you pass the -r flag, you'll get a release build.
 
 I accept no responsibility for Axims which break, spontaneously combust, or grow legs and run away.
