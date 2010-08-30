@@ -625,6 +625,7 @@ then
 	rm -rf output
 
 	ARCH=arm make -C src/kernel clean
+	ARCH=arm make -C src/haret clean
 	ARCH=arm make -C src/acx-mac80211 KERNELDIR=`pwd`/src/kernel clean
 	ARCH=arm make -C src/acx-mac80211/platform-aximx50 KERNELDIR=`pwd`/src/kernel clean
 
