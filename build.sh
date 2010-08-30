@@ -383,16 +383,33 @@ clonePermissions()
 
 buildWiFiFirmware()
 {
+	FWVER="Axim"
+	#FWVER="1.10.7.K"
+	CURRVER=""
+
 	mkdir -p build/wifi
+
+	if [ -f build/wifi/version ]
+	then
+		CURRVER=`cat build/wifi/version`
+	fi
+
+	if [ ! "$CURRVER" = "$FWVER" ]
+	then
+		rm -f build/wifi/WLANGEN.BIN
+		rm -f build/wifi/RADIO0d.BIN
+	fi
 
 	if [ ! -f build/wifi/WLANGEN.BIN ]
 	then
-		wget -O build/wifi/WLANGEN.BIN http://www.paulburton.eu/project/axdroid/wifi_fw/1.10.7.K/WLANGEN.BIN
+		wget -O build/wifi/WLANGEN.BIN http://www.paulburton.eu/project/axdroid/wifi_fw/$FWVER/WLANGEN.BIN
 	fi
 	if [ ! -f build/wifi/RADIO0d.BIN ]
 	then
-		wget -O build/wifi/RADIO0d.BIN http://www.paulburton.eu/project/axdroid/wifi_fw/1.10.7.K/RADIO0d.BIN
+		wget -O build/wifi/RADIO0d.BIN http://www.paulburton.eu/project/axdroid/wifi_fw/$FWVER/RADIO0d.BIN
 	fi
+
+	echo "$FWVER" >build/wifi/version
 
 	mkdir -p .build/root/mnt/lib/firmware
 	cp build/wifi/WLANGEN.BIN .build/root/mnt/lib/firmware/
