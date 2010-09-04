@@ -662,7 +662,7 @@ then
 	if [ ! "$AXDROID_SELFUPDATED" = "1" ]
 	then
 		git pull origin master
-		AXDROID_SELFUPDATED=1 ./build.sh "$@"
+		AXDROID_SELFUPDATED=1 ./build.sh -u $@
 		exit $?
 	fi
 
