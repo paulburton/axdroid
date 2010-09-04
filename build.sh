@@ -659,8 +659,14 @@ then
 	cp kernel.config src/kernel/arch/arm/configs/aximx50_defconfig
 elif [ $UPDATE -eq 1 ]
 then
-	git pull origin master
+	if [ ! "$AXDROID_SELFUPDATED" = "1" ]
+	then
+		git pull origin master
+		AXDROID_SELFUPDATED=1 ./build.sh "$@"
+		exit $?
+	fi
 
+	downloadTheCode
 	(
 		cd src/kernel
 		git pull
