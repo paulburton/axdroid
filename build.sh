@@ -541,6 +541,43 @@ buildSwap()
 	mkswap build/swap/swap.img
 }
 
+buildUpx()
+{
+	UPXVER="3.06"
+
+	if [ -f build/upx/upx -a -f build/upx/version ]
+	then
+		CURRVER=`cat build/upx/version`
+
+		if [ "$CURRVER" = "$UPXVER" ]
+		then
+			return 0
+		fi
+	fi
+
+	ARCH=`uname -m`
+
+	if [ "$ARCH" = "x86_64" ]
+	then
+		UPXBUILD="amd64_linux"
+	else
+		UPXBUILD="i386_linux"
+	fi
+
+	wget -O build/upx.tar.bz2 "http://upx.sourceforge.net/download/upx-$UPXVER-$UPXBUILD.tar.bz2"
+	(
+		cd build
+		tar xjf upx.tar.bz2 || exit 1
+	) || exit 1
+
+	mkdir -p build/upx
+	mv build/upx-$UPXVER-$UPXBUILD/upx build/upx/upx
+	echo "$UPXVER" >build/upx/version
+
+	rm -r build/upx-$UPXVER-$UPXBUILD
+	rm build/upx.tar.bz2
+}
+
 buildHaReT()
 {
 	if [ -f build/haret/haret.exe -a -f build/haret/default.txt -a -f build/haret/make-bootbundle.py ]
@@ -555,7 +592,7 @@ buildHaReT()
 
 	rm -rf build/haret
 	mkdir -p build/haret
-	upx -9 -o build/haret/haret.exe src/haret/out/haret.exe
+	cp src/haret/out/haret.exe build/haret/haret.exe
 	cp src/haret/tools/make-bootbundle.py build/haret/
 
 	echo "set GAFR(34) 1 
@@ -581,15 +618,20 @@ ramboot
 
 buildOutput()
 {
+	buildUpx
+
 	rm -rf output
 	mkdir output
 
 	cp -au build/root/root.img output/
 	cp -au build/swap/swap.img output/
 
-	./build/haret/make-bootbundle.py -o output/bootlinux.exe \
+	./build/haret/make-bootbundle.py -o output/bootlinux.exe.nocomp \
 		build/haret/haret.exe build/kernel/zImage /dev/null \
 		build/haret/default.txt
+
+	build/upx/upx --lzma -9 -o output/bootlinux.exe output/bootlinux.exe.nocomp
+	rm output/bootlinux.exe.nocomp
 }
 
 buildSDCard()
