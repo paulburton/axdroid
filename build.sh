@@ -394,8 +394,8 @@ clonePermissions()
 
 buildWiFiFirmware()
 {
-	FWVER="Axim"
-	#FWVER="1.10.7.K"
+	#FWVER="Axim"
+	FWVER="1.10.7.K"
 	CURRVER=""
 
 	mkdir -p build/wifi
