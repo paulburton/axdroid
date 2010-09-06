@@ -5,7 +5,7 @@ echo "Axdroid realroot init"
 DEBUG=1
 
 insmod /lib/modules/acx-mac80211.ko
-#insmod /lib/modules/aximx50_acx.ko
+insmod /lib/modules/aximx50_acx.ko
 
 if [ $DEBUG -eq 1 ]
 then

@@ -47,3 +47,10 @@ fi
 
 route add default gw 10.0.0.1 dev usb0
 
+HAVEWIFI=`grep aximx50_acx /proc/modules | wc -l`
+
+if [ $HAVEWIFI -eq 1 ]
+then
+	/system/bin/setprop wlan.driver.status ok
+fi
+
