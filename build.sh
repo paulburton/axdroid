@@ -307,15 +307,12 @@ buildWiFiModule()
 
 buildRamDisk()
 {
-	if [ -f build/ramdisk/ramdisk.cpio ]
+	if [ -f build/ramdisk/ramdisk.lzma ]
 	then
 		return 0
 	fi
 
 	mkdir -p build/ramdisk
-	touch build/ramdisk/ramdisk.cpio
-
-	rm -f build/kernel/zImage
 
 	rm -rf .build/ramdisk
 	mkdir -p .build/ramdisk
@@ -340,17 +337,16 @@ buildRamDisk()
 
 	buildInitLogo "VGA"
 	buildInitLogo "QVGA"
-	buildKernel			# For modules
 	buildCompCache
 	buildWiFiModule
 
 	(
 		set -e
 		cd .build/ramdisk
-		find . -print0 | cpio -H newc -ov -0 > ../../build/ramdisk/ramdisk.cpio
+		find . -print0 | cpio -H newc -ov -0 >../../build/ramdisk/ramdisk.cpio
 	) || exit 1
 
-	rm -f build/kernel/zImage
+	lzma -cz9 build/ramdisk/ramdisk.cpio >build/ramdisk/ramdisk.lzma
 }
 
 buildKernel()
@@ -636,7 +632,7 @@ buildOutput()
 	cp -au build/swap/swap.img output/
 
 	./build/haret/make-bootbundle.py -o output/bootlinux.exe.nocomp \
-		build/haret/haret.exe build/kernel/zImage /dev/null \
+		build/haret/haret.exe build/kernel/zImage build/ramdisk/ramdisk.lzma \
 		build/haret/default.txt
 
 	build/upx/upx --lzma -9 -o output/bootlinux.exe output/bootlinux.exe.nocomp
@@ -738,8 +734,8 @@ else
 
 	buildPlatform
 	buildBusyBox
-	buildRamDisk
 	buildKernel
+	buildRamDisk
 	buildSwap
 	buildHaReT
 	buildOutput
