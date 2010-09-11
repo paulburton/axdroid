@@ -349,15 +349,10 @@ buildRamDisk()
 	lzma -cz9 build/ramdisk/ramdisk.cpio >build/ramdisk/ramdisk.lzma
 }
 
-buildKernel()
+configureKernel()
 {
 	disableAlways="UID16 SYSCTL_SYSCALL"
 	disableInRelease="ANDROID_LOGGER KALLSYMS PRINTK BUG"
-
-	if [ -f build/kernel/zImage ]
-	then
-		return 0
-	fi
 
 	cp kernel.config src/kernel/.config
 
@@ -373,6 +368,16 @@ buildKernel()
 			sed -i "s/CONFIG_$confOption=y/CONFIG_$confOption=n/" src/kernel/.config
 		done
 	fi
+}
+
+buildKernel()
+{
+	if [ -f build/kernel/zImage ]
+	then
+		return 0
+	fi
+
+	configureKernel
 
 	PATH=$PATH:`pwd`/src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
 	ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
