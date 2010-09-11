@@ -55,6 +55,15 @@ then
 	HAVEMOUNTLOOP=`which umountloop | wc -l`
 fi
 
+if [ -z "$NUMJOBS" ]
+then
+	NUMJOBS=`grep processor /proc/cpuinfo | wc -l`
+	if [ $NUMJOBS -lt 1 ]
+	then
+		NUMJOBS=1
+	fi
+fi
+
 checkBuildType()
 {
 	if [ $RELEASE -eq 1 ]
@@ -199,7 +208,7 @@ buildBusyBox()
 		tar xjf $BUSYBOXTAR
 		cp ../busybox.config $BUSYBOXDIR/.config
 
-		CFLAGS="-mcpu=xscale -mtune=iwmmxt" make -C $BUSYBOXDIR -j4
+		CFLAGS="-mcpu=xscale -mtune=iwmmxt" make -C $BUSYBOXDIR -j$NUMJOBS
 		make -C $BUSYBOXDIR install
 
 		mkdir -p ../build/busybox
@@ -371,7 +380,7 @@ buildKernel()
 
 	PATH=$PATH:`pwd`/src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
 	ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
-	make -C src/kernel -j4
+	make -C src/kernel -j$NUMJOBS
 
 	PATH=$PATH:`pwd`/src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
 	ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
@@ -469,7 +478,7 @@ buildPlatform()
 		HOST_BUILD_TYPE=release \
 		BUILD_ID=MASTER \
 		WITH_DEXPREOPT=1 \
-		make -j4
+		make -j$NUMJOBS
 	) || exit 1
 
 	if [ $RELEASE -eq 1 -o $TEST -eq 1 ]
