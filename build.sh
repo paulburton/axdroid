@@ -177,6 +177,17 @@ downloadTheCode()
 			patch -p0 -fr - < ../../haret-build-fix.patch
 		) || exit 1
 	fi
+
+	if [ ! -d src/crosstool-ng ]
+	then
+		mkdir -p src
+
+		(
+			set -e
+			cd src
+			hg clone http://ymorin.is-a-geek.org/hg/crosstool-ng
+		) || exit 1
+	fi
 }
 
 mountLoop()
@@ -203,6 +214,55 @@ umountLoop()
 	else
 		sudo umount "$MOUNTPOINT"
 	fi
+}
+
+buildCrossToolNG()
+{
+	CT_PREFIX=`pwd`/toolchain/crosstool-ng
+
+	if [ -f toolchain/crosstool-ng/bin/ct-ng ]
+	then
+		return 0
+	fi
+
+	(
+		set -e
+		cd src/crosstool-ng
+
+		./configure --prefix=$CT_PREFIX
+		make
+		make install
+	) || exit 1
+}
+
+buildToolchain()
+{
+	TOOLTARGET=arm-axdroid-linux-uclibcgnueabi
+	TOOLBIN=`pwd`/toolchain/build/$TOOLTARGET/bin
+
+	if [ -f $TOOLBIN/$TOOLTARGET-gcc ]
+	then
+		return 0
+	fi
+
+	buildCrossToolNG
+
+	configureKernel
+	(
+		set -e
+		cd src/kernel
+		make headers_install ARCH=arm INSTALL_HDR_PATH=../../toolchain/kernel_headers
+	) || exit 1
+
+	(
+		set -e
+		cd toolchain
+
+		export PATH="$PATH:./crosstool-ng/bin"
+
+		cp ../config/crosstool-ng.config .config
+		ct-ng build
+	) || exit 1
 }
 
 buildBusyBox()
@@ -751,6 +811,7 @@ else
 
 	mkdir -p .build
 
+	buildToolchain
 	buildPlatform
 	buildBusyBox
 	buildKernel
