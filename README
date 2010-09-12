@@ -4,10 +4,10 @@ Author: Paul Burton <paulburton89@gmail.com>
         http://www.paulburton.eu
 
 Requirements:
-	Git, repo & CVS
-	CodeSourcery G++ Lite 2010q1-202 for ARM GNU/Linux
+	Git, repo & mercurial
 	arm-mingw32ce from the cegcc project
-	Usual android building stuff like JDK5
+	binutils & GCC build requirements
+	Usual android build requirements like JDK5
 
 The scripts mountloop/umountloop can make life easier if you setup sudo	to not ask for your password when you run them. Get them from:
 	http://www.paulburton.eu/downloads/shellscripts/mountloop
