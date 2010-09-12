@@ -1,9 +1,9 @@
-.build
-build
-dl
-output
-src
-toolchain
+/.build/
+/build/
+/dl/
+/output/
+/src/
+/toolchain/
 
-axdroid_*.zip
+/axdroid_*.zip
 
