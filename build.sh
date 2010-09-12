@@ -256,6 +256,8 @@ buildToolchain()
 		export PATH="$PATH:./crosstool-ng/bin"
 
 		cp ../config/crosstool-ng.config .config
+		sed -i "s/CT_PARALLEL_JOBS=./CT_PARALLEL_JOBS=$NUMJOBS/" .config
+
 		ct-ng build
 	) || exit 1
 }
