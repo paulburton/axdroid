@@ -206,7 +206,7 @@ buildBusyBox()
 
 		rm -rf $BUSYBOXDIR
 		tar xjf $BUSYBOXTAR
-		cp ../busybox.config $BUSYBOXDIR/.config
+		cp ../config/busybox.config $BUSYBOXDIR/.config
 
 		CFLAGS="-mcpu=xscale -mtune=iwmmxt" make -C $BUSYBOXDIR -j$NUMJOBS
 		make -C $BUSYBOXDIR install
@@ -354,7 +354,7 @@ configureKernel()
 	disableAlways="UID16 SYSCTL_SYSCALL"
 	disableInRelease="ANDROID_LOGGER KALLSYMS PRINTK BUG"
 
-	cp kernel.config src/kernel/.config
+	cp config/kernel.config src/kernel/.config
 
 	for confOption in $disableAlways
 	do
@@ -703,12 +703,12 @@ then
 	)
 elif [ $KCONFIG -eq 1 ]
 then
-	cp kernel.config src/kernel/.config
+	cp config/kernel.config src/kernel/.config
 
 	ARCH=arm make -C src/kernel xconfig
 
-	cp src/kernel/.config kernel.config
-	cp kernel.config src/kernel/arch/arm/configs/aximx50_defconfig
+	cp src/kernel/.config config/kernel.config
+	cp config/kernel.config src/kernel/arch/arm/configs/aximx50_defconfig
 elif [ $UPDATE -eq 1 ]
 then
 	if [ ! "$AXDROID_SELFUPDATED" = "1" ]
