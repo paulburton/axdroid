@@ -277,11 +277,13 @@ buildBusyBox()
 		set -e
 		cd .build
 
+		export PATH="$PATH:$TOOLBIN"
+
 		rm -rf $BUSYBOXDIR
 		tar xjf ../dl/$BUSYBOXTAR
 		cp ../config/busybox.config $BUSYBOXDIR/.config
 
-		CFLAGS="-mcpu=xscale -mtune=iwmmxt" make -C $BUSYBOXDIR -j$NUMJOBS
+		make -C $BUSYBOXDIR -j$NUMJOBS
 		make -C $BUSYBOXDIR install
 
 		mkdir -p ../build/busybox
