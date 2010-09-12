@@ -168,13 +168,8 @@ downloadTheCode()
 
 		(
 			set -e
-
 			cd src
-			cvs -d :pserver:anoncvs:anoncvs@anoncvs.handhelds.org:/cvs login
-			cvs -d :pserver:anoncvs:anoncvs@anoncvs.handhelds.org:/cvs co haret
-
-			cd haret
-			patch -p0 -fr - < ../../haret-build-fix.patch
+			git clone git://gitorious.org/axdroid-haret/haret.git haret
 		) || exit 1
 	fi
 
