@@ -1,6 +1,9 @@
 .build
 build
+dl
 output
-manifest
 src
+toolchain
+
 axdroid_*.zip
+
