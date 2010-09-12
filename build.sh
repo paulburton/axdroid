@@ -332,8 +332,8 @@ buildCompCache()
 
 	(
 		set -e
-
 		cd $CCDIR
+		export PATH="$PATH:$TOOLBIN"
 
 		sed -i 's|//#define CONFIG_SWAP_FREE_NOTIFY|#define CONFIG_SWAP_FREE_NOTIFY|' compat.h
 
@@ -344,8 +344,9 @@ buildCompCache()
 		# The makefile builds this for the host machine...
 		cd sub-projects/rzscontrol
 		rm rzscontrol
-		CFLAGS="-mcpu=xscale -mtune=iwmmxt" arm-none-linux-gnueabi-gcc -g -Wall \
+		$TOOLTARGET-gcc -g -Wall \
 			-D_GNU_SOURCE rzscontrol.c -o rzscontrol -static -I ../include -I../..
+		$TOOLTARGET-strip rzscontrol
 	) || exit 1
 
 	mkdir -p .build/ramdisk/lib/modules
