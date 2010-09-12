@@ -169,7 +169,7 @@ downloadTheCode()
 		(
 			set -e
 			cd src
-			git clone git://gitorious.org/axdroid-haret/haret.git haret
+			git clone git://gitorious.org/axdroid/haret.git haret
 		) || exit 1
 	fi
 
