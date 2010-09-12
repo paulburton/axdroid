@@ -337,9 +337,8 @@ buildCompCache()
 
 		sed -i 's|//#define CONFIG_SWAP_FREE_NOTIFY|#define CONFIG_SWAP_FREE_NOTIFY|' compat.h
 
-		PATH=$PATH:`pwd`/../../src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
-		ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
-		make KERNEL_BUILD_PATH=`pwd`/../../src/kernel
+		PATH="$PATH:$TOOLBIN" ARCH=arm CROSS_COMPILE=$TOOLTARGET- \
+			make KERNEL_BUILD_PATH=`pwd`/../../src/kernel
 
 		# The makefile builds this for the host machine...
 		cd sub-projects/rzscontrol
@@ -361,17 +360,15 @@ buildWiFiModule()
 	(
 		cd src/acx-mac80211
 
-		PATH=$PATH:`pwd`/../../src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
-		ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
-		EXTRA_KCONFIG="CONFIG_ACX_MAC80211=m CONFIG_ACX_MAC80211_PCI=n CONFIG_ACX_MAC80211_USB=n CONFIG_ACX_MAC80211_MEM=y CONFIG_MACH_X50=y" \
-		make KERNELDIR=`pwd`/../../src/kernel KVERSION=2.6.32 || exit 1
+		PATH="$PATH:$TOOLBIN" ARCH=arm CROSS_COMPILE=$TOOLTARGET- \
+			EXTRA_KCONFIG="CONFIG_ACX_MAC80211=m CONFIG_ACX_MAC80211_PCI=n CONFIG_ACX_MAC80211_USB=n CONFIG_ACX_MAC80211_MEM=y CONFIG_MACH_X50=y" \
+			make KERNELDIR=`pwd`/../../src/kernel KVERSION=2.6.32 || exit 1
 
 		cd platform-aximx50
 
-		PATH=$PATH:`pwd`/../../../src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
-		ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
-		EXTRA_KCONFIG="CONFIG_AXIMX50_ACX=m" \
-		make KERNELDIR=`pwd`/../../../src/kernel KVERSION=2.6.32 || exit 1
+		PATH="$PATH:$TOOLBIN" ARCH=arm CROSS_COMPILE=$TOOLTARGET- \
+			EXTRA_KCONFIG="CONFIG_AXIMX50_ACX=m" \
+			make KERNELDIR=`pwd`/../../../src/kernel KVERSION=2.6.32 || exit 1
 	) || exit 1
 
 	mkdir -p .build/ramdisk/lib/modules
@@ -453,13 +450,11 @@ buildKernel()
 
 	configureKernel
 
-	PATH=$PATH:`pwd`/src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
-	ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
-	make -C src/kernel -j$NUMJOBS
+	PATH="$PATH:$TOOLBIN" ARCH=arm CROSS_COMPILE=$TOOLTARGET- \
+		make -C src/kernel -j$NUMJOBS
 
-	PATH=$PATH:`pwd`/src/platform/prebuilt/linux-x86/toolchain/arm-eabi-4.4.0/bin \
-	ARCH=arm CROSS_COMPILE=arm-eabi- CFLAGS="-mcpu=xscale -mtune=iwmmxt" \
-	make -C src/kernel modules_install INSTALL_MOD_PATH=`pwd`/.build/ramdisk
+	PATH="$PATH:$TOOLBIN" ARCH=arm CROSS_COMPILE=$TOOLTARGET- \
+		make -C src/kernel modules_install INSTALL_MOD_PATH=`pwd`/.build/ramdisk
 
 	mkdir -p build/kernel
 	cp src/kernel/arch/arm/boot/zImage build/kernel/
