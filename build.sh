@@ -105,6 +105,27 @@ checkBuildType()
 	echo "Building '$BTYPE'"
 }
 
+downloadFile()
+{
+	URL=$1
+
+	if [ $# -gt 1 ]
+	then
+		NAME=$2
+	else
+		NAME=`basename "$URL"`
+	fi
+
+	mkdir -p dl
+
+	if [ -f "dl/$NAME" ]
+	then
+		return 0
+	fi
+
+	wget -O "dl/$NAME" "$URL"
+}
+
 downloadTheCode()
 {
 	if [ ! -d src/platform ]
@@ -195,17 +216,14 @@ buildBusyBox()
 	BUSYBOXTAR=busybox-$BUSYBOXVER.tar.bz2
 	BUSYBOXDIR=busybox-$BUSYBOXVER
 
+	downloadFile http://www.busybox.net/downloads/$BUSYBOXTAR
+
 	(
 		set -e
 		cd .build
 
-		if [ ! -f $BUSYBOXTAR ]
-		then
-			wget http://www.busybox.net/downloads/$BUSYBOXTAR -O $BUSYBOXTAR
-		fi
-
 		rm -rf $BUSYBOXDIR
-		tar xjf $BUSYBOXTAR
+		tar xjf ../dl/$BUSYBOXTAR
 		cp ../config/busybox.config $BUSYBOXDIR/.config
 
 		CFLAGS="-mcpu=xscale -mtune=iwmmxt" make -C $BUSYBOXDIR -j$NUMJOBS
@@ -242,17 +260,13 @@ buildCompCache()
 	CCDIR=".build/compcache-$CCVER"
 	CCTAR="compcache-$CCVER.tar.gz"
 
-	if [ ! -f ".build/$CCTAR" ]
-	then
-		wget http://compcache.googlecode.com/files/$CCTAR -O .build/$CCTAR
-	fi
-
+	downloadFile http://compcache.googlecode.com/files/$CCTAR
 	rm -rf $CCDIR
 
 	(
 		set -e
 		cd .build
-		tar xzf $CCTAR
+		tar xzf ../dl/$CCTAR
 	) || exit 1
 
 	buildKernel
