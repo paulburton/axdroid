@@ -249,6 +249,8 @@ buildToolchain()
 		make headers_install ARCH=arm INSTALL_HDR_PATH=../../toolchain/kernel_headers
 	) || exit 1
 
+	mkdir -p dl
+
 	(
 		set -e
 		cd toolchain
