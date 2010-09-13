@@ -26,6 +26,12 @@ hang()
 echo "Axdroid booting..." > /dev/console
 cat /proc/cpuinfo > /dev/console
 
+echo "Mountpoints:" >/dev/console
+mount >/dev/console 2>&1
+
+echo "/:" >/dev/console
+ls -l / >/dev/console 2>&1
+
 if [ $COMPCACHE -eq 1 ]
 then
 	insmod /lib/modules/ramzswap.ko num_devices=1
