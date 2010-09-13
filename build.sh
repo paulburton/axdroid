@@ -232,7 +232,7 @@ buildCrossToolNG()
 
 buildToolchain()
 {
-	TOOLTARGET=arm-axdroid-linux-uclibcgnueabi
+	TOOLTARGET=arm-axdroid-linux-gnueabi
 	TOOLBIN=`pwd`/toolchain/build/$TOOLTARGET/bin
 
 	if [ -f $TOOLBIN/$TOOLTARGET-gcc ]
