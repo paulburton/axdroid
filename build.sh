@@ -295,14 +295,15 @@ buildBusyBox()
 	) || exit 1
 
 	rm -f build/ramdisk/ramdisk.cpio
+	rm -f build/root/root.img
 }
 
 buildInitLogo()
 {
 	SUFFIX=$1
 	PNGFILE="graphics/initlogo/initlogo$SUFFIX.png"
-	RAWFILE=".build/ramdisk/initlogo$SUFFIX.raw"
-	RLEFILE=".build/ramdisk/initlogo$SUFFIX.rle"
+	RAWFILE=".build/root/mnt/initlogo$SUFFIX.raw"
+	RLEFILE=".build/root/mnt/initlogo$SUFFIX.rle"
 
 	if [ ! -f "$PNGFILE" ]
 	then
@@ -330,8 +331,6 @@ buildCompCache()
 		tar xzf ../dl/$CCTAR
 	) || exit 1
 
-	buildKernel
-
 	(
 		set -e
 		cd $CCDIR
@@ -350,15 +349,14 @@ buildCompCache()
 		$TOOLTARGET-strip rzscontrol
 	) || exit 1
 
-	mkdir -p .build/ramdisk/lib/modules
-	cp $CCDIR/ramzswap.ko .build/ramdisk/lib/modules/
-	cp $CCDIR/sub-projects/rzscontrol/rzscontrol .build/ramdisk/bin/
+	mkdir -p .build/root/mnt/lib/modules
+	mkdir -p .build/root/mnt/bin/
+	cp $CCDIR/ramzswap.ko .build/root/mnt/lib/modules/
+	cp $CCDIR/sub-projects/rzscontrol/rzscontrol .build/root/mnt/bin/
 }
 
 buildWiFiModule()
 {
-	buildKernel
-
 	(
 		cd src/acx-mac80211
 
@@ -373,9 +371,9 @@ buildWiFiModule()
 			make KERNELDIR=`pwd`/../../../src/kernel KVERSION=2.6.32 || exit 1
 	) || exit 1
 
-	mkdir -p .build/ramdisk/lib/modules
-	cp src/acx-mac80211/acx-mac80211.ko .build/ramdisk/lib/modules/
-	cp src/acx-mac80211/platform-aximx50/aximx50_acx.ko .build/ramdisk/lib/modules/
+	mkdir -p .build/root/mnt/lib/modules
+	cp src/acx-mac80211/acx-mac80211.ko .build/root/mnt/lib/modules/
+	cp src/acx-mac80211/platform-aximx50/aximx50_acx.ko .build/root/mnt/lib/modules/
 }
 
 buildRamDisk()
@@ -385,12 +383,8 @@ buildRamDisk()
 		return 0
 	fi
 
-	mkdir -p build/ramdisk
-	touch build/ramdisk/ramdisk.cpio
-
-	rm -f build/kernel/zImage
-
 	rm -rf .build/ramdisk
+	mkdir -p build/ramdisk
 	mkdir -p .build/ramdisk
 
 	cp -r build/busybox/* .build/ramdisk/
@@ -410,12 +404,6 @@ buildRamDisk()
 	then
 		sed -i 's/DEBUG=1/DEBUG=0/' .build/ramdisk/init
 	fi
-
-	buildInitLogo "VGA"
-	buildInitLogo "QVGA"
-	buildKernel			# For modules
-	buildCompCache
-	buildWiFiModule
 
 	(
 		set -e
@@ -564,6 +552,7 @@ buildPlatform()
 		OUTDIR=debug
 	fi
 
+	rm -rf .build/root
 	mkdir -p .build/root
 	dd if=/dev/zero of=.build/root/root.img bs=1M count=$ROOTSIZE
 	mkfs.ext4 -F .build/root/root.img
@@ -594,11 +583,19 @@ buildPlatform()
 		cp -r root/$SUBDIR/* .build/root/mnt/
 	fi
 
+	mkdir -p .build/root/mnt/dev
+	mkdir -p .build/root/mnt/proc
+	mkdir -p .build/root/mnt/sys
+
 	if [ $RELEASE -eq 1 ]
 	then
 		sed -i 's/DEBUG=1/DEBUG=0/' .build/root/mnt/axdroid.sh
 	fi
 
+	buildInitLogo "VGA"
+	buildInitLogo "QVGA"
+	buildCompCache
+	buildWiFiModule
 	buildWiFiFirmware
 
 	umountLoop .build/root/mnt
@@ -813,10 +810,10 @@ else
 	mkdir -p .build
 
 	buildToolchain
-	buildPlatform
 	buildBusyBox
 	buildRamDisk
 	buildKernel
+	buildPlatform
 	buildSwap
 	buildHaReT
 	buildOutput
