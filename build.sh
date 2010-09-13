@@ -821,10 +821,13 @@ else
 	buildHaReT
 	buildOutput
 
-	for card in $AXDROID_SD
-	do
-		buildSDCard "$card"
-	done
+	if [ ! -z "$AXDROID_SD" ]
+	then
+		for card in $AXDROID_SD
+		do
+			buildSDCard "$card"
+		done
+	fi
 
 	if [ $ZIP -eq 1 ]
 	then
