@@ -128,61 +128,44 @@ downloadFile()
 
 downloadTheCode()
 {
-	if [ ! -d src/platform ]
-	then
-		mkdir -p src/platform
+	mkdir -p src
+	cd src
 
-		(
-			set -e
-			cd src/platform
-			repo init -u git://github.com/paulburton/axdroid-manifest.git -b froyo
-			repo sync
-		) || exit 1
+	if [ ! -d platform ]
+	then
+		mkdir platform
+		cd platform
+		repo init -u git://github.com/paulburton/axdroid-manifest.git -b froyo
+		repo sync
+		cd ..
 	fi
 
-	if [ ! -d src/kernel ]
+	if [ ! -d kernel ]
 	then
-		mkdir -p src
-
-		(
-			set -e
-			cd src
-			git clone git://github.com/paulburton/axdroid-kernel.git kernel -b android-2.6.35
-		) || exit 1
+		git clone git://github.com/paulburton/axdroid-kernel.git kernel -b android-2.6.35
 	fi
 
-	if [ ! -d src/acx-mac80211 ]
+	if [ ! -d acx-mac80211 ]
 	then
-		mkdir -p src
-
-		(
-			set -e
-			cd src
-			git clone git://github.com/paulburton/axdroid-acx-mac80211.git acx-mac80211
-		) || exit 1
+		git clone git://github.com/paulburton/axdroid-acx-mac80211.git acx-mac80211
 	fi
 
-	if [ ! -d src/haret ]
+	if [ ! -d haret ]
 	then
-		mkdir -p src
-
-		(
-			set -e
-			cd src
-			git clone git://gitorious.org/axdroid/haret.git haret
-		) || exit 1
+		git clone git://gitorious.org/axdroid/haret.git haret
 	fi
 
-	if [ ! -d src/crosstool-ng ]
+	if [ ! -d crosstool-ng ]
 	then
-		mkdir -p src
-
-		(
-			set -e
-			cd src
-			hg clone http://ymorin.is-a-geek.org/hg/crosstool-ng
-		) || exit 1
+		hg clone http://ymorin.is-a-geek.org/hg/crosstool-ng crosstool-ng
 	fi
+
+	if [ ! -d compcache ]
+	then
+		hg clone https://compcache.googlecode.com/hg/ compcache
+	fi
+
+	cd ..
 }
 
 mountLoop()
