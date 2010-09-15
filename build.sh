@@ -10,7 +10,7 @@ ZIP=0
 KCONFIG=0
 UPDATE=0
 
-KERNELVER="2.6.35"
+KERNELVER="2.6.32"
 ROOTDIR=`pwd`
 
 while getopts 'rdczku' OPTION
@@ -315,6 +315,11 @@ buildCompCache()
 		set -e
 		cd src/compcache
 		export PATH="$PATH:$TOOLBIN"
+
+		if [ "$KERNELVER" = "2.6.32" ]
+		then
+			sed -i 's|//#define CONFIG_SWAP_FREE_NOTIFY|#define CONFIG_SWAP_FREE_NOTIFY|' compat.h
+		fi
 
 		PATH="$PATH:$TOOLBIN" ARCH=arm CROSS_COMPILE=$TOOLTARGET- \
 			make KERNELDIR=`pwd`/../../src/kernel
