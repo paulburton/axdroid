@@ -10,6 +10,8 @@ ZIP=0
 KCONFIG=0
 UPDATE=0
 
+KERNELVER="2.6.35"
+
 while getopts 'rdczku' OPTION
 do
 	case $OPTION in
@@ -142,7 +144,7 @@ downloadTheCode()
 
 	if [ ! -d kernel ]
 	then
-		git clone git://github.com/paulburton/axdroid-kernel.git kernel -b android-2.6.35
+		git clone git://github.com/paulburton/axdroid-kernel.git kernel -b android-$KERNELVER
 	fi
 
 	if [ ! -d acx-mac80211 ]
@@ -325,13 +327,13 @@ buildWiFiModule()
 
 		PATH="$PATH:$TOOLBIN" ARCH=arm CROSS_COMPILE=$TOOLTARGET- \
 			EXTRA_KCONFIG="CONFIG_ACX_MAC80211=m CONFIG_ACX_MAC80211_PCI=n CONFIG_ACX_MAC80211_USB=n CONFIG_ACX_MAC80211_MEM=y CONFIG_MACH_X50=y" \
-			make KERNELDIR=`pwd`/../../src/kernel KVERSION=2.6.32 || exit 1
+			make KERNELDIR=`pwd`/../../src/kernel KVERSION=$KERNELVER || exit 1
 
 		cd platform-aximx50
 
 		PATH="$PATH:$TOOLBIN" ARCH=arm CROSS_COMPILE=$TOOLTARGET- \
 			EXTRA_KCONFIG="CONFIG_AXIMX50_ACX=m" \
-			make KERNELDIR=`pwd`/../../../src/kernel KVERSION=2.6.32 || exit 1
+			make KERNELDIR=`pwd`/../../../src/kernel KVERSION=$KERNELVER || exit 1
 	) || exit 1
 
 	mkdir -p .build/root/mnt/lib/modules
