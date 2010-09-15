@@ -3,7 +3,7 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/system/bin
 export BOOTCLASSPATH=/system/framework/core.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar
 
-COMPCACHESZ=8196
+COMPCACHESZ=8
 
 HAVEVRAM=`cat /proc/mtd | grep "Video SDRAM" | wc -l`
 ISVGA=$HAVEVRAM
@@ -24,10 +24,11 @@ then
 	swapon -p 10 $VRAMMTDBLOCK
 fi
 
-if [ -e /dev/block/ramzswap0 ]
+if [ -e /dev/block/zram0 ]
 then
-	rzscontrol /dev/block/ramzswap0 --init --disksize_kb=$COMPCACHESZ
-	swapon -p 20 /dev/block/ramzswap0
+	echo $(($COMPCACHESZ*1024*1024)) >/sys/block/zram0/disksize
+	mkswap /dev/block/zram0
+	swapon -p 20 /dev/block/zram0
 fi
 
 if [ -e "/mnt/sdcard/swap.img" ]

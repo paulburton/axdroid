@@ -12,7 +12,7 @@ insmod /lib/modules/aximx50_acx.ko
 
 if [ $COMPCACHE -eq 1 ]
 then
-	insmod /lib/modules/ramzswap.ko num_devices=1
+	insmod /lib/modules/zram.ko num_devices=1
 fi
 
 if [ $DEBUG -eq 1 ]
