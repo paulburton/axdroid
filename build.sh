@@ -143,10 +143,13 @@ downloadTheCode()
 		cd ..
 	fi
 
-	if [ ! -d kernel ]
+	if [ ! -d kernel-$KERNELVER ]
 	then
-		git clone git://github.com/paulburton/axdroid-kernel.git kernel -b android-$KERNELVER
+		git clone git://github.com/paulburton/axdroid-kernel.git kernel-$KERNELVER -b android-$KERNELVER
 	fi
+
+	rm -f kernel
+	ln -s kernel-$KERNELVER kernel
 
 	if [ ! -d acx-mac80211 ]
 	then
