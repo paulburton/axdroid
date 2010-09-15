@@ -786,6 +786,14 @@ then
 		cd src/platform
 		repo sync
 	)
+	(
+		cd src/crosstool-ng
+		hg update
+	)
+	(
+		cd src/compcache
+		hg update
+	)
 else
 	downloadTheCode
 	checkBuildType
