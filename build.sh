@@ -147,7 +147,7 @@ downloadTheCode()
 		(
 			set -e
 			cd src
-			git clone git://github.com/paulburton/axdroid_kernel.git kernel -b android-2.6.35
+			git clone git://github.com/paulburton/axdroid-kernel.git kernel -b android-2.6.35
 		) || exit 1
 	fi
 
