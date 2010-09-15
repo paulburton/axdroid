@@ -305,37 +305,17 @@ buildCompCache()
 	CCDIR=".build/compcache-$CCVER"
 	CCTAR="compcache-$CCVER.tar.gz"
 
-	downloadFile http://compcache.googlecode.com/files/$CCTAR
-	rm -rf $CCDIR
-
 	(
 		set -e
-		cd .build
-		tar xzf ../dl/$CCTAR
-	) || exit 1
-
-	(
-		set -e
-		cd $CCDIR
+		cd src/compcache
 		export PATH="$PATH:$TOOLBIN"
 
-		sed -i 's|//#define CONFIG_SWAP_FREE_NOTIFY|#define CONFIG_SWAP_FREE_NOTIFY|' compat.h
-
 		PATH="$PATH:$TOOLBIN" ARCH=arm CROSS_COMPILE=$TOOLTARGET- \
-			make KERNEL_BUILD_PATH=`pwd`/../../src/kernel
-
-		# The makefile builds this for the host machine...
-		cd sub-projects/rzscontrol
-		rm rzscontrol
-		$TOOLTARGET-gcc -g -Wall \
-			-D_GNU_SOURCE rzscontrol.c -o rzscontrol -static -I ../include -I../..
-		$TOOLTARGET-strip rzscontrol
+			make KERNELDIR=`pwd`/../../src/kernel
 	) || exit 1
 
 	mkdir -p .build/root/mnt/lib/modules
-	mkdir -p .build/root/mnt/bin/
-	cp $CCDIR/ramzswap.ko .build/root/mnt/lib/modules/
-	cp $CCDIR/sub-projects/rzscontrol/rzscontrol .build/root/mnt/bin/
+	cp src/compcache/zram.ko .build/root/mnt/lib/modules/
 }
 
 buildWiFiModule()
