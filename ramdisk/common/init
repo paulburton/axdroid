@@ -53,13 +53,7 @@ cpRd2Rt()
 mntRd2Rt()
 {
 	RDPATH=/$1
-
-	if [ $# -gt 1]
-	then
-		RTPATH=/realroot/$2
-	else
-		RTPATH=/realroot/$1
-	fi
+	RTPATH=/realroot/$2
 
 	mkdir -p $RTPATH
 	[ ! $? -eq 0 ] && echo "Unable to mkdir $RTPATH" && hang
@@ -88,9 +82,9 @@ cpRd2Rt sbin
 cpRd2Rt usr/bin
 cpRd2Rt usr/sbin
 
-mntRd2Rt proc
-mntRd2Rt sys
-mntRd2Rt dev
+mntRd2Rt proc proc
+mntRd2Rt sys sys
+mntRd2Rt dev dev
 mntRd2Rt sdcard mnt/sdcard
 
 exec switch_root -c /dev/console /realroot /axdroid.sh
