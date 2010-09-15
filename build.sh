@@ -11,6 +11,7 @@ KCONFIG=0
 UPDATE=0
 
 KERNELVER="2.6.35"
+ROOTDIR=`pwd`
 
 while getopts 'rdczku' OPTION
 do
@@ -731,8 +732,10 @@ then
 
 	ARCH=arm make -C src/kernel clean
 	ARCH=arm make -C src/haret clean
-	ARCH=arm make -C src/acx-mac80211 KERNELDIR=`pwd`/src/kernel clean
-	ARCH=arm make -C src/acx-mac80211/platform-aximx50 KERNELDIR=`pwd`/src/kernel clean
+	ARCH=arm make -C src/crosstool-ng clean
+	ARCH=arm make -C src/acx-mac80211 KERNELDIR=$ROOTDIR/src/kernel clean
+	ARCH=arm make -C src/acx-mac80211/platform-aximx50 KERNELDIR=$ROOTDIR/src/kernel clean
+	cd src/compcache; ARCH=arm make KERNELDIR=$ROOTDIR/src/kernel clean; cd $ROOTDIR
 
 	(
 		cd src/platform
