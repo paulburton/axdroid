@@ -68,7 +68,12 @@ mntRd2Rt()
 	[ ! $? -eq 0 ] && echo "Unable to move mount $RDPATH to root" && hang
 }
 
-echo "Axdroid booting..."
+echo " / _ \\        | |         (_)   | |"
+echo "/ /_\\ \\_  ____| |_ __ ___  _  __| |"
+echo "|  _  \\ \\/ / _\` | '__/ _ \\| |/ _\` |"
+echo "| | | |>  < (_| | | | (_) | | (_| |"
+echo "\\_| |_/_/\\_\\__,_|_|  \\___/|_|\\__,_|"
+echo
 
 mkdir /sdcard
 mount -t vfat -o async,noatime,nodiratime,umask=0000 /dev/mmcblk0p1 /sdcard
