@@ -692,7 +692,7 @@ buildOutput()
 	# Please, if you want to distribute your own build of Axdroid then go ahead
 	# but make it clear that it didn't come from me! Thankyou, Paul.
 	hostName=`hostname`
-	[ "$hostName" = "paul-desktop"] && cp README.release output/README.txt
+	[ "$hostName" = "paul-desktop" ] && cp README.release output/README.txt
 }
 
 buildSDCard()
