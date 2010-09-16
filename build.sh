@@ -688,6 +688,11 @@ buildOutput()
 
 	build/upx/upx --lzma -9 -o output/bootlinux.exe output/bootlinux.exe.nocomp
 	rm output/bootlinux.exe.nocomp
+
+	# Please, if you want to distribute your own build of Axdroid then go ahead
+	# but make it clear that it didn't come from me! Thankyou, Paul.
+	hostName=`hostname`
+	[ "$hostName" = "paul-desktop"] && cp README.release output/README.txt
 }
 
 buildSDCard()

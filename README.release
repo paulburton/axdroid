@@ -1,0 +1,51 @@
+================================================================================
+                       / _ \        | |         (_)   | |
+                      / /_\ \_  ____| |_ __ ___  _  __| |
+                      |  _  \ \/ / _` | '__/ _ \| |/ _` |
+                      | | | |>  < (_| | | | (_) | | (_| |
+                      \_| |_/_/\_\__,_|_|  \___/|_|\__,_|
+
+                  Android for Dell Axim X50(v)/X51(v) devices
+                   http://www.paulburton.eu/projects/axdroid
+================================================================================
+
+DISCLAIMER: I take no responsibility if this bricks your Axim, causes it to
+            spontaneously combust, grow legs and run away, or otherwise causes
+            damage in any way. Use it at your own peril.
+
+   If you didn't download this from me (http://www.paulburton.eu) then please
+           direct any complaints at whoever you did download it from!
+
+--------------------------------------------------------------------------------
+
+What is this?
+    This is Android 2.2 (Froyo), for your Dell Axim X50(v) or X51(v)
+    It is still incomplete. Don't expect much yet - or you'll be dissapointed.
+
+Why?!?
+    Because I can :)
+
+How do I use it?
+    1) Extract the files from this zip archive into the root of an SD card.
+    2) Place said SD card into your Axim
+    3) Open file explorer, go to the SD card and run 'bootlinux.exe'
+    4) Wait for Android to boot!
+
+Why is it so slow?
+    A couple of reasons:
+    1) The Axim only has 64MiB of RAM - Android needs more. So, we have to use
+       swap space on the SD card (the swap.img file).
+    2) SD cards are (very) slow in comparison to RAM.
+
+Will you port this to <insert device here>?
+    I can only port to hardware I own, and the only PDA I own is a Dell Axim.
+    So sorry, the answer is no...
+
+How can I build this myself?
+    See http://github.com/paulburton/axdroid
+
+How can I help?
+    1) Test.
+    2) Complain if things break between builds (politely!).
+    3) Agree a takeover deal with Dell or HTC and then release hardware specs
+
